@@ -232,9 +232,9 @@ class Annotations(val c: whitebox.Context) extends Common {
                      with ..$companionParents { $companionSelf =>
         import scala.language.experimental.{macros => $canUseMacros}
 
-        val empty: $name                  = null.asInstanceOf[$name]
-        def fromRef($ref: $Ref): $name    = new $name($ref)
-        def toRef($instance: $name): $Ref = $instance.$ref
+        val empty: $name                   = null.asInstanceOf[$name]
+        def fromRepr($ref: $Ref): $name    = new $name($ref)
+        def toRepr($instance: $name): $Ref = $instance.$ref
         def apply(..$args)(implicit $memory: $MemoryClass): $name =
           $MethodModule.allocator[$name]($memory, ..$argNames)
         def unapply(scrutinee: $AnyClass): $unapplyTpt =
@@ -369,8 +369,8 @@ class Annotations(val c: whitebox.Context) extends Common {
       $moduleMods object $termName extends { ..$rawEarly } with ..$rawParents { $rawSelf =>
         import scala.language.experimental.{macros => $canUseMacros}
         val empty: $name                     = null.asInstanceOf[$name]
-        def fromRef($ref: $Ref): $name       = new $name($ref)
-        def toRef($instance: $name): $Ref    = $instance.$ref
+        def fromRepr($ref: $Ref): $name      = new $name($ref)
+        def toRepr($instance: $name): $Ref   = $instance.$ref
         implicit def $coerce[T](t: T): $name =
           macro $internal.macros.WhiteboxMethod.coerce[$name, T]
         ..$stats

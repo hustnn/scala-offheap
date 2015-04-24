@@ -169,11 +169,11 @@ trait Common extends Definitions {
     case BooleanTpe =>
       q"$memory.getByte($addr) != ${Literal(Constant(0.toByte))}"
     case ArrayOf(tpe) =>
-      q"$ArrayModule.fromRef[$tpe]($memory.getRef($addr))"
+      q"$ArrayModule.fromRepr[$tpe]($memory.getRef($addr))"
     case ClassOf(_, _, _) =>
       val companion = tpe.typeSymbol.companion
       val getRef = if (checked) TermName("getRef") else TermName("getLong")
-      q"$companion.fromRef($memory.$getRef($addr))"
+      q"$companion.fromRepr($memory.$getRef($addr))"
   }
 
   def write(addr: Tree, tpe: Type, value: Tree, memory: Tree): Tree = tpe match {
@@ -187,11 +187,11 @@ trait Common extends Definitions {
                         else ${Literal(Constant(0.toByte))})
       """
     case ArrayOf(_) =>
-      q"$memory.putRef($addr, $ArrayModule.toRef($value))"
+      q"$memory.putRef($addr, $ArrayModule.toRepr($value))"
     case ClassOf(_, _, _) =>
       val companion = tpe.typeSymbol.companion
       val putRef = if (checked) TermName("putRef") else TermName("putLong")
-      q"$memory.$putRef($addr, $companion.toRef($value))"
+      q"$memory.$putRef($addr, $companion.toRepr($value))"
   }
 
 
@@ -272,6 +272,6 @@ trait Common extends Definitions {
   def cast(v: Tree, from: Type, to: Type) = {
     val fromCompanion = from.typeSymbol.companion
     val toCompanion = to.typeSymbol.companion
-    q"$toCompanion.fromRef($fromCompanion.toRef($v))"
+    q"$toCompanion.fromRepr($fromCompanion.toRepr($v))"
   }
 }

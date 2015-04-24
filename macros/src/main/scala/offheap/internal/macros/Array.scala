@@ -117,7 +117,7 @@ class Array(val c: blackbox.Context) extends Common {
           else {
             val $addr = $mem.allocate($size)
             ${write(q"$addr", SizeTpe, len, mem)}
-            $ArrayModule.fromRef[$T](new $RefClass($addr, $mem))
+            $ArrayModule.fromRepr[$T](new $RefClass($addr, $mem))
           }
         """
       }
